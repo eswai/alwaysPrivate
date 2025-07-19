@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h1>Whitelist</h1>
+  <div class="container">
+    <input type="text" id="domain-input" placeholder="e.g., example.com">
+    <button id="add-button">Add</button>
+  </div>
+  <div class="container">
+    <button id="add-current-domain-button">Add Current Domain</button>
+  </div>
+  <div class="container file-actions">
+    <button id="import-button">Import</button>
+    <button id="export-button">Export</button>
+    <input type="file" id="import-file-input" style="display: none;" accept=".json">
+  </div>
+  <ul id="whitelist"></ul>
+  <script src="popup.js"></script>
+</body>
+</html>

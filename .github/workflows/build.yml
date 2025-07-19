@@ -1,0 +1,23 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Package extension
+      run: |
+        zip -r alwaysPrivate.zip . -x ".git/*" ".github/*"
+        mv alwaysPrivate.zip alwaysPrivate.xpi
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: alwaysPrivate-xpi
+        path: alwaysPrivate.xpi
