@@ -11,9 +11,14 @@ BROWSER.webRequest.onBeforeRequest.addListener(
       return;
     }
 
-    const currentTab = (await BROWSER.tabs.query({ active: true, currentWindow: true }))[0];
-    if (currentTab && currentTab.incognito) {
-      return;
+    // Check if the request is from an incognito tab
+    try {
+      const tab = await BROWSER.tabs.get(details.tabId);
+      if (tab && tab.incognito) {
+        return;
+      }
+    } catch (e) {
+      // Tab might not exist, continue processing
     }
 
     const url = new URL(details.url);
