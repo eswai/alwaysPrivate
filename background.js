@@ -24,11 +24,23 @@ BROWSER.webRequest.onBeforeRequest.addListener(
       return;
     }
 
-    // Open in a private window
-    BROWSER.windows.create({
-      url: details.url,
-      incognito: true,
-    });
+    const windows = await BROWSER.windows.getAll();
+    const privateWindow = windows.find(w => w.incognito);
+
+    if (privateWindow) {
+      // If a private window already exists, create a new tab in it.
+      BROWSER.tabs.create({
+        windowId: privateWindow.id,
+        url: details.url,
+        active: true
+      });
+    } else {
+      // Otherwise, create a new private window.
+      BROWSER.windows.create({
+        url: details.url,
+        incognito: true,
+      });
+    }
 
     // If the request came from a newly opened blank tab, close it.
     try {
