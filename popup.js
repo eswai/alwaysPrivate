@@ -78,8 +78,25 @@ exportButton.addEventListener("click", async () => {
   URL.revokeObjectURL(url);
 });
 
-importButton.addEventListener("click", () => {
-  importFileInput.click();
+importButton.addEventListener("click", async () => {
+  // Check if we have the import parameter (meaning we're in a popup window)
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  if (urlParams.get('import') === 'true') {
+    // We're already in a popup window, trigger file input
+    importFileInput.click();
+  } else {
+    // Open popup.html in a new window for import functionality
+    await BROWSER.windows.create({
+      url: BROWSER.runtime.getURL('popup.html?import=true'),
+      type: 'popup',
+      width: 400,
+      height: 600
+    });
+    
+    // Close the current popup window
+    window.close();
+  }
 });
 
 importFileInput.addEventListener("change", async (event) => {
@@ -111,4 +128,17 @@ importFileInput.addEventListener("change", async (event) => {
 });
 
 
-document.addEventListener("DOMContentLoaded", renderWhitelist);
+document.addEventListener("DOMContentLoaded", () => {
+  renderWhitelist();
+  
+  // Check if opened for import functionality
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('import') === 'true') {
+    // Add a visual indicator that this is the import window
+    document.title = 'Always Private - Import Whitelist';
+    const h1 = document.querySelector('h1');
+    if (h1) {
+      h1.textContent = 'Import Whitelist';
+    }
+  }
+});
