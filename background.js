@@ -1,4 +1,5 @@
 const BROWSER = typeof browser !== 'undefined' ? browser : chrome;
+let lastEventTime = 0;
 
 async function getWhitelist() {
   const result = await BROWSER.storage.local.get("whitelist");
@@ -10,6 +11,13 @@ BROWSER.webRequest.onBeforeRequest.addListener(
     if (details.frameId !== 0 || details.type !== "main_frame") {
       return;
     }
+
+    // Ignore events within 10ms of the last event
+    const now = Date.now();
+    if (now - lastEventTime < 10) {
+      return;
+    }
+    lastEventTime = now;
 
     // Check if the request is from an incognito tab
     try {
