@@ -24,11 +24,21 @@ BROWSER.webRequest.onBeforeRequest.addListener(
       return;
     }
 
-    // Cancel the current request and open in a private window
+    // Open in a private window
     BROWSER.windows.create({
       url: details.url,
       incognito: true,
     });
+
+    // If the request came from a newly opened blank tab, close it.
+    try {
+      const tab = await BROWSER.tabs.get(details.tabId);
+      if (tab && (tab.url === "about:blank" || !tab.url)) {
+        await BROWSER.tabs.remove(details.tabId);
+      }
+    } catch (e) {
+      // Tab may have already been closed.
+    }
 
     return { cancel: true };
   },
