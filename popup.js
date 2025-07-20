@@ -83,6 +83,7 @@ importButton.addEventListener("click", () => {
 });
 
 importFileInput.addEventListener("change", async (event) => {
+  console.log("Importing file:", event.target.files);
   const file = event.target.files[0];
   if (!file) {
     return;
