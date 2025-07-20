@@ -23,5 +23,10 @@
   },
   "icons": {
     "48": "icons/icon-48.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "alwaysprivate@example.com"
+    }
   }
 }
